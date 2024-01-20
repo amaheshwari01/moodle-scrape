@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "moodlescrape"
+version = "0.1.0"
+description = ""
+authors = ["amaheshwari01 <acoding2007@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+bs4 = "^0.0.1"
+markdownify = "^0.11.6"
+flask = "^3.0.0"
+flask-cors = "^4.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
