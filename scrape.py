@@ -20,6 +20,16 @@ blacklistClasses = [
     920,
     1194,
     353,
+    89,
+    35,
+    19,
+    36,
+    2,
+    17,
+    34,
+    88,
+    90,
+    69,
 ]  # courses that show up but dont batter
 
 
@@ -179,6 +189,7 @@ def courseData(session, classurl):
     return data
 
 
+# tst scrape here
 if __name__ == "__main__":
     session = create_session("username", "password")
     classes = getclasses(session)

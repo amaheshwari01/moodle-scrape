@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import scrape
 from flask_cors import CORS, cross_origin
+from waitress import serve
 
 
 app = Flask(__name__)
@@ -27,6 +28,7 @@ def classes():
     cookies = request.json.get("cookies")
     username = request.json.get("username")
     password = request.json.get("password")
+    print("requestmade")
     if not username or not password:
         return jsonify({"message": "please give valid body"}), 400
     session = scrape.regenSession(username, password, cookies)
@@ -66,4 +68,5 @@ def getLessonplan():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    print("running")
+    serve(app, host="0.0.0.0", port=1257)
