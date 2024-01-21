@@ -189,7 +189,7 @@ def courseData(session, classurl):
     return data
 
 
-# test scrape here
+# test scrape heree
 if __name__ == "__main__":
     session = create_session("username", "password")
     classes = getclasses(session)
