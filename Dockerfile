@@ -1,13 +1,10 @@
-FROM python:3.11-slim
+FROM python:3.8-slim-buster
 
-WORKDIR /app
+WORKDIR /scraper
 
-COPY . /app
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
 
-RUN pip install poetry
-COPY pyproject.toml poetry.lock /app/
-RUN poetry update && poetry install
-
+COPY . .
 EXPOSE 8080
-
-CMD ["poetry", "run", "python", "/app/main.py", "0.0.0.0:8080"]
+CMD [ "waitress-serve", "--call" , "app:run"]

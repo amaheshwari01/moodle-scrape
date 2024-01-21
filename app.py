@@ -67,6 +67,9 @@ def getLessonplan():
     return lessonpan
 
 
-if __name__ == "__main__":
-    print("running")
+def run():
     serve(app, host="0.0.0.0", port=8080)
+
+
+if __name__ == "__main__":
+    run()
