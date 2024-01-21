@@ -30,7 +30,7 @@ blacklistClasses = [
     88,
     90,
     69,
-]  # courses that show up but dont batter
+]  # courses that show up but dont matter
 
 
 def create_session(username, password):
@@ -189,7 +189,7 @@ def courseData(session, classurl):
     return data
 
 
-# tst scrape here
+# test scrape here
 if __name__ == "__main__":
     session = create_session("username", "password")
     classes = getclasses(session)
