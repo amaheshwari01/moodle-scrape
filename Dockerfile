@@ -8,6 +8,6 @@ RUN pip install poetry
 COPY pyproject.toml poetry.lock /app/
 RUN poetry update && poetry install
 
-EXPOSE 1257
+EXPOSE 8080
 
-CMD ["poetry", "run", "python", "/app/main.py", "0.0.0.0:1257"]
+CMD ["poetry", "run", "python", "/app/main.py", "0.0.0.0:8080"]
