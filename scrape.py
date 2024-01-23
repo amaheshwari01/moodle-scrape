@@ -49,6 +49,9 @@ def create_session(username, password):
     }
 
     result = session.post(login_url, data=payload)
+    if "Invalid login" in result.text:
+        # print("Invalid Login")
+        raise Exception("Invalid Login")
     return session
 
 
@@ -77,6 +80,17 @@ def getclasses(session):
     return classes
 
 
+def authcheck(session):
+    pass_url = "https://learn.vcs.net"
+
+    r = session.get(pass_url)
+    rdef = requests.get(pass_url)
+    if r.text == rdef.text:
+        return True
+    else:
+        return False
+
+
 def regenSession(username, password, cookies):
     if not cookies:
         session = create_session(username, password)
@@ -89,7 +103,11 @@ def regenSession(username, password, cookies):
         pprint(cookies[key])
         if cookies[key]["expires"]:
             if curtime > int(cookies[key]["expires"]):
-                session = create_session(username, password)
+                try:
+                    session = create_session(username, password)
+                except Exception as e:
+                    print(e)
+                    raise Exception("Invalid Login")
                 print("expired")
                 break
         cookie_obj = requests.cookies.create_cookie(

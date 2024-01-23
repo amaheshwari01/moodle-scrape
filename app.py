@@ -31,7 +31,10 @@ def classes():
     print("requestmade")
     if not username or not password:
         return jsonify({"message": "please give valid body"}), 400
-    session = scrape.regenSession(username, password, cookies)
+    try:
+        session = scrape.regenSession(username, password, cookies)
+    except Exception as e:
+        return jsonify({"message": str(e)}), 400
 
     classes = scrape.getclasses(session)
     return jsonify({"classes": classes, "cookies": sessionToCOokies(session)})
@@ -46,8 +49,10 @@ def coursedata():
     courseurl = request.json.get("courseurl")
     if not username or not password or not courseurl:
         return jsonify({"message": "please give valid body"}), 400
-
-    session = scrape.regenSession(username, password, cookies)
+    try:
+        session = scrape.regenSession(username, password, cookies)
+    except Exception as e:
+        return jsonify({"message": str(e)}), 400
     courseData = scrape.courseData(session, courseurl)
     return jsonify({"courseData": courseData, "cookies": sessionToCOokies(session)})
 
@@ -62,7 +67,10 @@ def getLessonplan():
     if not username or not password or not lessonurl:
         return jsonify({"message": "please give valid body"}), 400
 
-    session = scrape.regenSession(username, password, cookies)
+    try:
+        session = scrape.regenSession(username, password, cookies)
+    except Exception as e:
+        return jsonify({"message": str(e)}), 400
     lessonpan = scrape.getDayPlan(lessonurl, session)
     return lessonpan
 
@@ -72,4 +80,5 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    # run()
+    app.run(debug=True)
