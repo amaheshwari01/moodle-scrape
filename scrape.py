@@ -101,7 +101,7 @@ def regenSession(username, password, cookies):
     curtime = time.time()
     for key in cookies.keys():
         pprint(cookies[key])
-        if cookies[key]["expires"]:
+        if cookies[key]["expires"] and cookies[key]["expires"] != "None":
             if curtime > int(cookies[key]["expires"]):
                 try:
                     session = create_session(username, password)
