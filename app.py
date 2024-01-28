@@ -13,10 +13,9 @@ def sessionToCOokies(session):
 
     # Add expiry dates to cookies
     for cookie in session.cookies:
-        # print(cookie)
         cookies[cookie.name] = {
             "value": cookie.value,
-            "expires": cookie.expires,
+            "expires": str(cookie.expires),
             "domain": cookie.domain,
         }
     return cookies
