@@ -213,6 +213,7 @@ def courseData(session, classurl):
             "id": q[0],
             "days": getLessonPlan(q[0], session),
         }
+    data["id"] = classurl
 
     return data
 
