@@ -110,12 +110,19 @@ def regenSession(username, password, cookies):
                     raise Exception("Invalid Login")
                 print("expired")
                 break
-        cookie_obj = requests.cookies.create_cookie(
-            domain=cookies[key]["domain"],
-            name=key,
-            value=cookies[key]["value"],
-            expires=cookies[key]["expires"],
-        )
+
+            cookie_obj = requests.cookies.create_cookie(
+                domain=cookies[key]["domain"],
+                name=key,
+                value=cookies[key]["value"],
+                expires=cookies[key]["expires"],
+            )
+        else:
+            cookie_obj = requests.cookies.create_cookie(
+                domain=cookies[key]["domain"],
+                name=key,
+                value=cookies[key]["value"],
+            )
 
         session.cookies.set_cookie(cookie_obj)
     return session
