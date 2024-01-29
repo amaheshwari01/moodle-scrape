@@ -99,6 +99,7 @@ def regenSession(username, password, cookies):
     # put cookies into sesisin
     # session.
     curtime = time.time()
+    nonecount = 0
     for key in cookies.keys():
         pprint(cookies[key])
         if cookies[key]["expires"] and cookies[key]["expires"] != "None":
@@ -110,11 +111,19 @@ def regenSession(username, password, cookies):
                     raise Exception("Invalid Login")
                 print("expired")
                 break
+        else:
+            nonecount += 1
         cookie_obj = requests.cookies.create_cookie(
             domain=cookies[key]["domain"], name=key, value=cookies[key]["value"]
         )
 
         session.cookies.set_cookie(cookie_obj)
+    if nonecount == len(cookies.keys()):
+        try:
+            session = create_session(username, password)
+        except Exception as e:
+            print(e)
+            raise Exception("Invalid Login")
     return session
 
 
