@@ -30,6 +30,7 @@ blacklistClasses = [
     88,
     90,
     69,
+    1202,
 ]  # courses that show up but dont matter
 
 
