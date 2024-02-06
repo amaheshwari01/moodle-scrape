@@ -1,8 +1,9 @@
-from flask import Flask, request, jsonify
+import json
+from flask import Flask, Response, request, jsonify
 import scrape
 from flask_cors import CORS, cross_origin
 from waitress import serve
-
+import base64
 
 app = Flask(__name__)
 CORS(app)
@@ -19,6 +20,11 @@ def sessionToCOokies(session):
             "domain": cookie.domain,
         }
     return cookies
+
+
+@app.route("/")
+def hello():
+    return "Hello World"
 
 
 @app.route("/getClasses", methods=["POST"])
@@ -70,8 +76,32 @@ def getLessonplan():
         session = scrape.regenSession(username, password, cookies)
     except Exception as e:
         return jsonify({"message": str(e)}), 400
-    lessonpan = scrape.getDayPlan(lessonurl, session)
+    try:
+        lessonpan = scrape.getDayPlan(lessonurl, session, cookies, username, password)
+    except Exception as e:
+        return jsonify({"message": str(e)}), 400
     return lessonpan
+
+
+@app.route("/showPage")
+@cross_origin()
+def showPage():
+    data = request.args.get("data")
+    data = base64.urlsafe_b64decode(data)
+    data = json.loads(data)
+    try:
+        cookies = data["cookies"]
+        username = data["username"]
+        password = data["password"]
+        url = data["url"]
+    except Exception as e:
+        return jsonify({"message": "please give valid body"}), 400
+    # url
+    try:
+        session = scrape.regenSession(username, password, cookies)
+    except Exception as e:
+        return jsonify({"message": str(e)}), 400
+    return scrape.getPage(url, session, cookies, username, password)
 
 
 def run():
@@ -79,5 +109,5 @@ def run():
 
 
 if __name__ == "__main__":
-    # run()
-    app.run(debug=True)
+    run()
+    # app.run(debug=True, host="0.0.0.0", port=8080)

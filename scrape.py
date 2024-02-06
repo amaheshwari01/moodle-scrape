@@ -1,10 +1,12 @@
 # create comments explaining the code
 # use the requests library to get the html from the website
+import base64
 import json
 
 
 from bs4 import BeautifulSoup
 from pprint import pprint
+from flask import Response
 import requests
 from markdownify import markdownify as md
 import time
@@ -192,18 +194,51 @@ def getLessonPlan(quarterurl, session):
     return days
 
 
-def getDayPlan(dayurl, session):
+def parseLinks(cursoup, cookies, username, password):
+    for a_tag in cursoup.find_all("a"):
+        # Check if 'href' contains "learn.vcs.net"
+        if "learn.vcs.net" in a_tag.get("href", ""):
+
+            data = {
+                "cookies": cookies,
+                "username": username,
+                "password": password,
+                "url": a_tag["href"],
+            }
+            # Replace 'href' with custom URL
+            a_tag["href"] = (
+                "https://moodle.aayanmaheshwari.com/showPage?data="
+                + base64.urlsafe_b64encode(json.dumps(data).encode()).decode()
+            )
+    return cursoup
+
+
+def getDayPlan(dayurl, session, cookies, username, password):
     curday = session.get(dayurl)
 
     curdaysoup = BeautifulSoup(curday.text, "html.parser")
+    curdaysoup = parseLinks(curdaysoup, cookies, username, password)
+    # replace all links with the href and the link contains learn.vcs.net with :
     if "book" in dayurl:
         dayplan = curdaysoup.find("div", {"class": "book_content"})
+        # return str(dayplan)
         return str(dayplan)
     else:
         dayplan = curdaysoup.find("section", {"id": "region-main"}).find(
             "div", {"class": "no-overflow"}
         )
         return str(dayplan)
+
+    # return plaindayplan
+
+
+def getPage(url, session, cookies, username, password):
+    response = session.get(url)
+    content_type = response.headers.get("content-type")
+    content = response.content
+    # if contenttype is html then parse links
+
+    return Response(content, content_type=content_type)
 
 
 def courseData(session, classurl):
