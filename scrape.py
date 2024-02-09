@@ -103,7 +103,7 @@ def regenSession(username, password, cookies):
     # session.
     curtime = time.time()
     for key in cookies.keys():
-        pprint(cookies[key])
+        # pprint(cookies[key])
         if cookies[key]["expires"] and cookies[key]["expires"] != "None":
             if curtime > int(cookies[key]["expires"]):
                 try:
@@ -111,7 +111,7 @@ def regenSession(username, password, cookies):
                 except Exception as e:
                     print(e)
                     raise Exception("Invalid Login")
-                print("expired")
+                # print("expired")
                 break
 
             cookie_obj = requests.cookies.create_cookie(
@@ -233,12 +233,13 @@ def getDayPlan(dayurl, session, cookies, username, password):
 
 
 def getPage(url, session, cookies, username, password):
+    print(url)
     response = session.get(url)
     content_type = response.headers.get("content-type")
     content = response.content
-    # if contenttype is html then parse links
-
-    return Response(content, content_type=content_type)
+    soup = BeautifulSoup(content, "html.parser")
+    title = soup.title.string if soup.title else "Moodle-Page"
+    return Response(content, content_type=content_type, headers={"Title": title})
 
 
 def courseData(session, classurl):
