@@ -2,11 +2,13 @@
 # use the requests library to get the html from the website
 import base64
 import json
+import mimetypes
+import os
 
 
 from bs4 import BeautifulSoup
 from pprint import pprint
-from flask import Response
+from flask import Response, make_response
 import requests
 from markdownify import markdownify as md
 import time
@@ -188,9 +190,7 @@ def getLessonPlan(quarterurl, session):
                 days.append(["https://learn.vcs.net/mod/book/" + curhref, curday])
         else:
             days.append([quarterurl, curday])
-        # print(d.find("a", href=True)["href"])
-    # days = [(d.find("a", href=True), d.text) for d in days]
-    # pprint(days)
+
     return days
 
 
@@ -234,12 +234,40 @@ def getDayPlan(dayurl, session, cookies, username, password):
 
 def getPage(url, session, cookies, username, password):
     print(url)
+    # response = session.get(url)
+    # content_type = response.headers.get("content-type")
+    # content = response.content
+    # soup = BeautifulSoup(content, "html.parser")
+    # title = soup.title.string if soup.title else "Moodle-Page"
+    # # Create a response object with the appropriate headers
+    # resp = make_response(content)
+    # resp.headers["Content-Type"] = content_type
+    # resp.headers["Content-Disposition"] = f'attachment; filename="{title}.html"'
+    # return resp
+
+    # response = session.get(url)
+    # content_type = response.headers.get("content-type")
+    # content = response.content
+    # title = os.path.basename(url)  # Extract the filename from the URL
+    # # Create a response object with the appropriate headers
+    # resp = make_response(content)
+    # resp.headers["Content-Type"] = content_type
+    # resp.headers["Content-Disposition"] = f'attachment; filename="{title}"'
+    # return resp
+
     response = session.get(url)
     content_type = response.headers.get("content-type")
     content = response.content
-    soup = BeautifulSoup(content, "html.parser")
-    title = soup.title.string if soup.title else "Moodle-Page"
-    return Response(content, content_type=content_type, headers={"Title": title})
+    title = os.path.basename(url)  # Extract the filename from the URL
+    # Get the file extension based on the content type
+    extension = mimetypes.guess_extension(content_type)
+    if extension:
+        title += extension
+    # Create a response object with the appropriate headers
+    resp = make_response(content)
+    resp.headers["Content-Type"] = content_type
+    resp.headers["Content-Disposition"] = f'attachment; filename="{title}"'
+    return resp
 
 
 def courseData(session, classurl):
