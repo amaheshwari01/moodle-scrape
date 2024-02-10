@@ -5,6 +5,8 @@ import json
 import mimetypes
 import os
 
+from urllib.parse import urlparse
+from urllib.parse import parse_qs
 
 from bs4 import BeautifulSoup
 from pprint import pprint
@@ -204,12 +206,27 @@ def parseLinks(cursoup, cookies, username, password):
                 "cookies": cookies,
                 "username": username,
                 "password": password,
-                "url": a_tag["href"],
             }
+
+            parsed_url = urlparse(a_tag["href"])
+            params = parse_qs(parsed_url.query)
+
+            # If you want a dictionary with single values instead of lists, you can do the following:
+            params_single_values = {k: v[0] for k, v in params.items()}
+
+            # print(params_single_values)
+            paramstring = "?"
+            for key in params_single_values:
+                paramstring += key + "=" + params_single_values[key] + "&"
+            paramstring += (
+                "auth=" + base64.urlsafe_b64encode(json.dumps(data).encode()).decode()
+            )
             # Replace 'href' with custom URL
+
             a_tag["href"] = (
-                "https://moodle.aayanmaheshwari.com/showPage?data="
-                + base64.urlsafe_b64encode(json.dumps(data).encode()).decode()
+                "https://moodle.aayanmaheshwari.com/showPage/"
+                + parsed_url.path
+                + paramstring
             )
     return cursoup
 
@@ -234,41 +251,13 @@ def getDayPlan(dayurl, session, cookies, username, password):
 
 
 def getPage(url, session, cookies, username, password):
-    print(url)
-    # response = session.get(url)
-    # content_type = response.headers.get("content-type")
-    # content = response.content
-    # soup = BeautifulSoup(content, "html.parser")
-    # title = soup.title.string if soup.title else "Moodle-Page"
-    # # Create a response object with the appropriate headers
-    # resp = make_response(content)
-    # resp.headers["Content-Type"] = content_type
-    # resp.headers["Content-Disposition"] = f'attachment; filename="{title}.html"'
-    # return resp
-
-    # response = session.get(url)
-    # content_type = response.headers.get("content-type")
-    # content = response.content
-    # title = os.path.basename(url)  # Extract the filename from the URL
-    # # Create a response object with the appropriate headers
-    # resp = make_response(content)
-    # resp.headers["Content-Type"] = content_type
-    # resp.headers["Content-Disposition"] = f'attachment; filename="{title}"'
-    # return resp
-
+    # print(url)
     response = session.get(url)
     content_type = response.headers.get("content-type")
     content = response.content
-    title = os.path.basename(url)  # Extract the filename from the URL
-    # Get the file extension based on the content type
-    extension = mimetypes.guess_extension(content_type)
-    if extension:
-        title += extension
-    # Create a response object with the appropriate headers
-    resp = make_response(content)
-    resp.headers["Content-Type"] = content_type
-    resp.headers["Content-Disposition"] = f'attachment; filename="{title}"'
-    return resp
+    # if contenttype is html then parse links
+
+    return Response(content, content_type=content_type)
 
 
 def courseData(session, classurl):

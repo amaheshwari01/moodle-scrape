@@ -83,20 +83,30 @@ def getLessonplan():
     return lessonpan
 
 
-@app.route("/showPage")
+@app.route("/showPage/<path:url>", methods=["GET"])
 @cross_origin()
-def showPage():
-    data = request.args.get("data")
+def showPage(url):
+    # return request.args.to_dict()
+
+    data = request.args.get("auth")
     data = base64.urlsafe_b64decode(data)
     data = json.loads(data)
     try:
         cookies = data["cookies"]
         username = data["username"]
         password = data["password"]
-        url = data["url"]
+        # get all params except auth
+        params = request.args.to_dict()
+        del params["auth"]
+        paramstring = "?"
+        for key in params:
+            paramstring += key + "=" + params[key] + "&"
+        paramstring = paramstring[:-1]
+        url = "https://learn.vcs.net/" + url + paramstring
+        # return url
     except Exception as e:
         return jsonify({"message": "please give valid body"}), 400
-    # url
+    # # url
     try:
         session = scrape.regenSession(username, password, cookies)
     except Exception as e:
@@ -109,5 +119,5 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
-    # app.run(debug=True, host="0.0.0.0", port=8080)
+    # run()
+    app.run(debug=True, port=8080)
