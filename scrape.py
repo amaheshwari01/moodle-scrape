@@ -154,8 +154,6 @@ def parse_class(classurl, session):
     tabs = [t for t in tabs if "lesson" in t[0].lower()]
     LessonPlanPage = session.get(tabs[0][1])
     lpsoup = BeautifulSoup(LessonPlanPage.text, "html.parser")
-    with open("test.html", "w") as f:
-        f.write(LessonPlanPage.text)
 
     # pprint(lpsoup.find("div", {"class": "course-content"}))
     quarters = (

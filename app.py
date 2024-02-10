@@ -119,5 +119,5 @@ def run():
 
 
 if __name__ == "__main__":
-    # run()
-    app.run(debug=True, port=8080)
+    run()
+    # app.run(debug=True, port=8080)
