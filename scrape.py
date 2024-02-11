@@ -222,7 +222,8 @@ def parseLinks(cursoup, cookies, username, password):
             # Replace 'href' with custom URL
 
             a_tag["href"] = (
-                "https://moodle.aayanmaheshwari.com/showPage/"
+                # "https://moodle.aayanmaheshwari.com/showPage/"
+                "http://localhost:8080/showPage/"
                 + parsed_url.path
                 + paramstring
             )
@@ -254,6 +255,12 @@ def getPage(url, session, cookies, username, password):
     content_type = response.headers.get("content-type")
     content = response.content
     # if contenttype is html then parse links
+    # if contettype is html or xml or php then parse links
+    if "html" in content_type or "php" in content_type:
+        content = parseLinks(
+            BeautifulSoup(content, "html.parser"), cookies, username, password
+        )
+        content = str(content)
 
     return Response(content, content_type=content_type)
 
