@@ -222,8 +222,8 @@ def parseLinks(cursoup, cookies, username, password):
             # Replace 'href' with custom URL
 
             a_tag["href"] = (
-                # "https://moodle.aayanmaheshwari.com/showPage/"
-                "http://localhost:8080/showPage/"
+                "https://moodle.aayanmaheshwari.com/showPage/"
+                # "http://localhost:8080/showPage/"
                 + parsed_url.path
                 + paramstring
             )
