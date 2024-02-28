@@ -233,7 +233,7 @@ def parseLinks(cursoup, cookies, username, password):
                     )
                 )
 
-                print(encoded_text)
+                # print(encoded_text)
                 paramstring += "auth=" + encoded_text
 
             except Exception as e:

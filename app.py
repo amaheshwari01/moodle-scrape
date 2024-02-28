@@ -40,7 +40,7 @@ def classes():
     cookies = request.json.get("cookies")
     username = request.json.get("username")
     password = request.json.get("password")
-    print("requestmade")
+    # print("requestmade")
     if not username or not password:
         return jsonify({"message": "please give valid body"}), 400
     try:
@@ -99,7 +99,7 @@ def showPage(url):
     cipher_suite = Fernet(apikey)
 
     data = cipher_suite.decrypt(str(data))
-    print(data)
+    # print(data)
     decoded_string = base64.b64decode(data)
     data = json.loads(decoded_string)
     try:
