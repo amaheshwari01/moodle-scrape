@@ -7,6 +7,7 @@ import os
 
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
+import urllib
 
 from bs4 import BeautifulSoup
 from pprint import pprint
@@ -14,6 +15,10 @@ from flask import Response, make_response
 import requests
 from markdownify import markdownify as md
 import time
+from cryptography.fernet import Fernet
+
+apikey = bytes(os.environ["MY_KEY"], "utf-8")
+
 
 start = time.time()
 data = {}
@@ -216,14 +221,28 @@ def parseLinks(cursoup, cookies, username, password):
             paramstring = "?"
             for key in params_single_values:
                 paramstring += key + "=" + params_single_values[key] + "&"
-            paramstring += (
-                "auth=" + base64.urlsafe_b64encode(json.dumps(data).encode()).decode()
-            )
+            try:
+                cipher_suite = Fernet(apikey)
+
+                encoded_text = urllib.parse.quote(
+                    cipher_suite.encrypt(
+                        bytes(
+                            base64.b64encode(json.dumps(data).encode()).decode(),
+                            "utf-8",
+                        )
+                    )
+                )
+
+                print(encoded_text)
+                paramstring += "auth=" + encoded_text
+
+            except Exception as e:
+                print(e)
             # Replace 'href' with custom URL
 
             a_tag["href"] = (
                 "https://moodle.aayanmaheshwari.com/showPage/"
-                # "http://localhost:8080/showPage/"
+                # "http://localhost:8090/showPage/"
                 + parsed_url.path
                 + paramstring
             )

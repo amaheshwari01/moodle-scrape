@@ -4,6 +4,13 @@ import scrape
 from flask_cors import CORS, cross_origin
 from waitress import serve
 import base64
+import os
+from cryptography.fernet import Fernet
+
+# os.environ["MY_KEY"] =
+
+apikey = bytes(os.environ["MY_KEY"], "utf-8")
+
 
 app = Flask(__name__)
 CORS(app)
@@ -89,8 +96,12 @@ def showPage(url):
     # return request.args.to_dict()
 
     data = request.args.get("auth")
-    data = base64.urlsafe_b64decode(data)
-    data = json.loads(data)
+    cipher_suite = Fernet(apikey)
+
+    data = cipher_suite.decrypt(str(data))
+    print(data)
+    decoded_string = base64.b64decode(data)
+    data = json.loads(decoded_string)
     try:
         cookies = data["cookies"]
         username = data["username"]
@@ -120,4 +131,4 @@ def run():
 
 if __name__ == "__main__":
     run()
-    # app.run(debug=True, port=8080)
+    # app.run(debug=True, port=8090)
