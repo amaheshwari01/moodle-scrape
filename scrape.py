@@ -185,6 +185,8 @@ def parse_class(classurl, session):
 def getLessonPlan(quarterurl, session):
     curquarter = session.get(quarterurl)
     curquartersoup = BeautifulSoup(curquarter.text, "html.parser")
+    if "No content has been added to this book yet." in curquartersoup.text:
+        return []
     dayshtmls = curquartersoup.find("div", {"class": "card-body p-3"}).find_all("li")
     days = []
     for d in dayshtmls:
@@ -290,10 +292,12 @@ def courseData(session, classurl):
     data = {}
     quarters = parse_class(classurl, session)
     for q in quarters:
-        data[q[1]] = {
-            "id": q[0],
-            "days": getLessonPlan(q[0], session),
-        }
+        daysdata = getLessonPlan(q[0], session)
+        if len(daysdata) > 0:
+            data[q[1]] = {
+                "id": q[0],
+                "days": getLessonPlan(q[0], session),
+            }
     data["id"] = classurl
 
     return data
