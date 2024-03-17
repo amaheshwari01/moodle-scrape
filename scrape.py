@@ -173,6 +173,8 @@ def parse_class(classurl, session):
         )
         for c in quarters
     ]
+    quarters = [q for q in quarters if "quarter" in q[1].lower()]
+
     quarters = sorted(quarters)
     # pprint(quarters)
     # pprint( tabs[0][1])
