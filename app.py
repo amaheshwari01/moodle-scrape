@@ -34,6 +34,20 @@ def hello():
     return "Hello World"
 
 
+@app.route("/login", methods=["POST"])
+@cross_origin()
+def login():
+    username = request.json.get("username")
+    password = request.json.get("password")
+    if not username or not password:
+        return jsonify({"message": "please give valid body"}), 400
+    try:
+        session = scrape.create_session(username, password)
+    except Exception as e:
+        return jsonify({"message": str(e)}), 400
+    return jsonify({"cookies": sessionToCOokies(session)})
+
+
 @app.route("/getClasses", methods=["POST"])
 @cross_origin()
 def classes():
