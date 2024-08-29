@@ -7,9 +7,8 @@ import base64
 import os
 from cryptography.fernet import Fernet
 
-# os.environ["MY_KEY"] =
 
-apikey = bytes(os.environ["MY_KEY"], "utf-8")
+apikey = bytes("helloworld", "utf-8")
 
 
 app = Flask(__name__)
@@ -144,5 +143,5 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
-    # app.run(debug=True, port=8090)
+    # run()
+    app.run(debug=True, port=8090)
