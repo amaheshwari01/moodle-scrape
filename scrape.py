@@ -112,7 +112,7 @@ def create_session_cookies(username, password, cookies):
             domain=cookies[cookie]["domain"],
             name=cookie,
             value=cookies[cookie]["value"],
-            expires=cookies[cookie]["expires"],
+            # expires="None",
         )
         session.cookies.set_cookie(cookie_obj)
     if checkSession(session):
@@ -125,23 +125,23 @@ def checkSession(session):
     pass_url = "https://learn.vcs.net"
 
     r = session.get(pass_url)
-    rdef = requests.get(pass_url)
-    if r.text == rdef.text:
+    # rdef = requests.get(pass_url)
+    if "Log in" in r.text:
         return False
     else:
         return True
 
 
 def regenSession(username, password, cookies):
-    # if not cookies:
-    session = create_session(username, password)
+    if not cookies:
+        session = create_session(username, password)
+        return session
+
+    session = create_session_cookies(username, password, cookies)
     return session
 
 
-# session = create_session_cookies(username, password, cookies)
-# return session
-
-# session = requests.Session()
+# session = requests.Session()o
 # # put cookies into sesisin
 # # session.
 # curtime = time.time()
