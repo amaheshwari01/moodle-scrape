@@ -133,43 +133,45 @@ def checkSession(session):
 
 
 def regenSession(username, password, cookies):
-    if not cookies:
-        session = create_session(username, password)
-        return session
-    session = create_session_cookies(username, password, cookies)
+    # if not cookies:
+    session = create_session(username, password)
     return session
 
-    # session = requests.Session()
-    # # put cookies into sesisin
-    # # session.
-    # curtime = time.time()
-    # for key in cookies.keys():
-    #     # pprint(cookies[key])
-    #     if cookies[key]["expires"] and cookies[key]["expires"] != "None":
-    #         if curtime > int(cookies[key]["expires"]):
-    #             try:
-    #                 session = create_session(username, password)
-    #             except Exception as e:
-    #                 print(e)
-    #                 raise Exception("Invalid Login")
-    #             # print("expired")
-    #             break
 
-    #         cookie_obj = requests.cookies.create_cookie(
-    #             domain=cookies[key]["domain"],
-    #             name=key,
-    #             value=cookies[key]["value"],
-    #             expires=cookies[key]["expires"],
-    #         )
-    #     else:
-    #         cookie_obj = requests.cookies.create_cookie(
-    #             domain=cookies[key]["domain"],
-    #             name=key,
-    #             value=cookies[key]["value"],
-    #         )
+# session = create_session_cookies(username, password, cookies)
+# return session
 
-    #     session.cookies.set_cookie(cookie_obj)
-    # return session
+# session = requests.Session()
+# # put cookies into sesisin
+# # session.
+# curtime = time.time()
+# for key in cookies.keys():
+#     # pprint(cookies[key])
+#     if cookies[key]["expires"] and cookies[key]["expires"] != "None":
+#         if curtime > int(cookies[key]["expires"]):
+#             try:
+#                 session = create_session(username, password)
+#             except Exception as e:
+#                 print(e)
+#                 raise Exception("Invalid Login")
+#             # print("expired")
+#             break
+
+#         cookie_obj = requests.cookies.create_cookie(
+#             domain=cookies[key]["domain"],
+#             name=key,
+#             value=cookies[key]["value"],
+#             expires=cookies[key]["expires"],
+#         )
+#     else:
+#         cookie_obj = requests.cookies.create_cookie(
+#             domain=cookies[key]["domain"],
+#             name=key,
+#             value=cookies[key]["value"],
+#         )
+
+#     session.cookies.set_cookie(cookie_obj)
+# return session
 
 
 def parse_class(classurl, session):
