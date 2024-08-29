@@ -133,11 +133,12 @@ def checkSession(session):
 
 
 def regenSession(username, password, cookies):
+    if not cookies:
+        session = create_session(username, password)
+        return session
     session = create_session_cookies(username, password, cookies)
     return session
-    # if not cookies:
-    #     session = create_session(username, password)
-    #     return session
+
     # session = requests.Session()
     # # put cookies into sesisin
     # # session.

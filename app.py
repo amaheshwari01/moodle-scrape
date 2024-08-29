@@ -8,8 +8,7 @@ import os
 from cryptography.fernet import Fernet
 
 
-apikey = bytes("helloworld", "utf-8")
-
+apikey = bytes(os.environ["MY_KEY"], "utf-8")
 
 app = Flask(__name__)
 CORS(app)
@@ -143,5 +142,5 @@ def run():
 
 
 if __name__ == "__main__":
-    # run()
-    app.run(debug=True, port=8090)
+    run()
+    # app.run(debug=True, port=8090)
